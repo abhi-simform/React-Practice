@@ -1,35 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from 'react';
+import Logo from './components/Logo';
+import Form from './components/Form';
+import PackingList from './components/PackingList';
+import Stats from './components/Stats';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface ItemType {
+  id: number;
+  description: string;
+  quantity: number;
+  packed?: boolean;
 }
 
-export default App
+export default function App() {
+  const [items, setItems] = useState<ItemType[]>([]);
+
+  function handleAddItems(item: ItemType) {
+    const result: ItemType[] = [...items, item];
+    setItems(result);
+  }
+
+  function handleDeleteItem(id: number) {
+    setItems((items) => items.filter((item) => item.id !== id));
+  }
+
+  function handlePacked(id: number) {
+    setItems((items) =>
+      items.map((item) =>
+        item.id === id ? { ...item, packed: !item.packed } : item
+      )
+    );
+  }
+
+  function handleClearList() {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete all items?'
+    );
+    if (confirmed) setItems([]);
+  }
+
+  return (
+    <div className="app">
+      <Logo />
+      <Form onAddItems={handleAddItems} />
+      <PackingList
+        items={items}
+        onDeleteItem={handleDeleteItem}
+        onChangePacked={handlePacked}
+        onClearList={handleClearList}
+      />
+      <Stats items={items} />
+    </div>
+  );
+}

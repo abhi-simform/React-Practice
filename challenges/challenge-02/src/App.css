@@ -1,0 +1,24 @@
+.container {
+  display: grid;
+  justify-items: center;
+}
+
+button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-inline: 1rem;
+}
+
+.step,
+.count {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-bottom: 1rem;
+  align-items: center;
+}
+
+input[type='number'] {
+  padding-inline-start: 0.5rem;
+}
